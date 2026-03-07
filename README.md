@@ -27,47 +27,69 @@ NexOnline/
 
 ---
 
-## No tengo Node.js: ¿cómo lo uso igual?
+## ¿Cómo uso la web? (sin Node.js)
 
-Sí puedes usarlo sin instalar Node.js en tu computadora.
+No necesitas instalar Node en tu PC para publicar y abrir la web.
 
-### Opción A (recomendada): publicar el frontend con GitHub Pages
+### Paso 1) Subir este proyecto a GitHub
 
-> Esta opción NO requiere Node local. GitHub Actions compila por ti en la nube.
+Si todavía no lo subiste, usa estos comandos (cambia `TU_USUARIO` y `TU_REPO`):
 
-1. Crea un repositorio en GitHub y sube este proyecto.
-2. Asegúrate de usar la rama `main`.
-3. En GitHub entra a **Settings → Pages**.
-4. En **Build and deployment**, elige **GitHub Actions**.
-5. Haz push a `main`.
-6. Espera a que termine el workflow `Deploy Frontend to GitHub Pages`.
-7. Tu web quedará en:
-   - `https://TU_USUARIO.github.io/TU_REPO/`
+```bash
+git init
+git add .
+git commit -m "NexOnline inicial"
+git branch -M main
+git remote add origin https://github.com/TU_USUARIO/TU_REPO.git
+git push -u origin main
+```
 
-El workflow ya está incluido en:
+### Paso 2) Activar GitHub Pages
+
+1. Entra a tu repositorio en GitHub.
+2. Ve a **Settings → Pages**.
+3. En **Build and deployment**, selecciona **GitHub Actions**.
+4. Haz un push a `main` (o ejecuta el workflow manualmente).
+
+El workflow ya está creado en:
+
 - `.github/workflows/deploy-frontend-pages.yml`
 
-### Opción B: ver/editar sin instalar nada
+### Paso 3) Abrir tu web publicada
 
-- Editar online: `https://github.dev/TU_USUARIO/TU_REPO`
-- También puedes usar GitHub Codespaces (entorno cloud con Node preinstalado).
+Cuando termine el workflow, tu URL será:
 
----
-
-## Importante sobre backend
-
-GitHub Pages solo sirve frontend estático.
-
-Para tener chat/DMs/llamadas en tiempo real, debes desplegar `backend/server.js` en un servicio Node (por ejemplo: Render, Railway, Fly.io, VPS).
-
-Variables recomendadas para backend en producción:
-
-- `PORT=4000`
-- `CLIENT_ORIGIN=https://TU_USUARIO.github.io`
+- `https://TU_USUARIO.github.io/TU_REPO/`
 
 ---
 
-## Si SÍ tienes Node.js (uso local)
+## ¿Y cómo la publico con chat real (backend)?
+
+GitHub Pages solo publica frontend estático. Para tener DMs/chat/llamadas en tiempo real debes desplegar `backend/server.js` en un hosting Node (Render, Railway, Fly.io o VPS).
+
+### Despliegue rápido sugerido del backend (Render)
+
+1. Crea una cuenta en Render.
+2. **New + → Web Service**.
+3. Conecta este repositorio.
+4. Configura:
+   - **Root Directory**: `backend`
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+5. Variables de entorno:
+   - `PORT=4000`
+   - `CLIENT_ORIGIN=https://TU_USUARIO.github.io`
+6. Deploy.
+
+Te dará una URL tipo:
+
+- `https://nexonline-backend.onrender.com`
+
+Luego el frontend debe apuntar a esa URL para sockets/API.
+
+---
+
+## ¿Cómo uso la web localmente (si algún día instalas Node)?
 
 ### Backend
 
@@ -84,6 +106,14 @@ cd frontend
 npm install
 npm run dev
 ```
+
+---
+
+## Problemas comunes
+
+- **No aparece la web en GitHub Pages**: revisa la pestaña **Actions** y confirma que el job terminó en verde.
+- **Pantalla en blanco**: confirma que la URL termina con `/TU_REPO/` y que el build terminó bien.
+- **No funciona chat en producción**: faltó desplegar backend o `CLIENT_ORIGIN` está mal configurado.
 
 ---
 
